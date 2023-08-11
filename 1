@@ -1,0 +1,128 @@
+6
+
+child <- urnsamples(c("B","G"),size=3,ordered=TRUE,replace=TRUE)
+pb<-rep(1/8,times=8)
+child<-probspace(child,prob=pb)
+child<-addrv(child,G=(X1=="G")+(X2=="G")+(X3=="G"))
+print(child)
+p<-vector(mode="numeric")
+x<-c(0:3)
+for(i in 1:4)
+{
+  p[i]<-prob(child,G==i-1)
+}
+print("Random Variables")
+print(x)
+print("Probability Mass Function")
+print(p)
+print("Distribution Function")
+cdf<-cumsum(p)
+print(cdf)
+plot(x,p,type="h",main="Probability Mass Function",lwd=10)
+plot(x,cdf,type="s",main="CDF")
+points(x,cdf,pch=16)
+
+8
+f<-function(x)
+{
+  if(x<0)
+  {
+    return(0)
+  }
+  else if(0<=x && x<1)
+  {
+    return(x/4)
+  }
+  else if(1<=x && x<2)
+  {
+    return(1/2)
+  }
+  else if(2<=x && x<3)
+  {
+    return((x/12)+(1/2))
+  }
+  else
+  {
+    return(1)
+  }
+}
+f=Vectorize(f)
+x<-c(-2:5)
+plot(x,f(x),type="s")
+points(x,f(x),pch=16)
+pv<-f(2-1e-10)
+print(paste("P(X<2)=",pv))
+pv<-f(2)-f(2-1-1e-10)
+print(paste("P(X=2)=",pv))
+pv<-f(3-1-1e-10)-f(1-1e-10)
+print(paste("P(1<=x<3)=",pv))
+pv<-1-f(3/2)
+print(paste("P(X>3/2)=",pv))
+print("P(X=5/2)=0")
+pv<-f(7)-f(2)
+print(paste("P(2<=x<=7)=",pv))
+
+12
+s<-rolldie(2,makespace=TRUE)
+a<-addrv(s,FUN=max,invars=c("X1","X2"),name="M")
+r<-marginal(a,vars="M")
+print(r)
+w<-cumsum(r)
+print(w)
+plot(r,type="h",lwd=10,main="Mass Function")
+plot(w,type="s",main="Distribution Function")
+
+14
+f = function(x)
+{
+  if(x < -2)
+    0
+  else if(-2<=x && x<2)
+    1/2
+  else if(2<=x && x<4)
+    5/8
+  else if(4<=x && x<6)
+    8/9
+  else
+    1
+}
+
+f = Vectorize(f)
+x <- c(-3,-2,2,4,6)
+
+plot(x,f(x),type="s",main="distribution function")
+points(x,f(x),pch=16)
+
+
+cdf_pt <- sapply(x,f)
+print("CDF:")
+print(cdf_pt)
+
+pmf <- c(cdf_pt[1], diff(cdf_pt))
+print("probability mass function:")
+print(pmf)
+plot(x,pmf,type="h",main="pmf")
+
+30
+f<-function(x)
+{
+  if(x==-1||x==-2||x==0||x==1||x==2||x==3)
+  {
+    return(abs(x-3)+1/28)
+  }
+  else
+  {
+    return(0)
+  }
+}
+x<-c(-4:4)
+pmf<-sapply(x,p)
+print("The random variables are:")
+print(x)
+print("The probability mass function is:")
+print(pmf)
+plot(x,pmf,type="h",main="PMF")
+e<-sum((-4:4)*pmf)
+ex2<-sum((-4:4)**2*pmf)
+var<-ex2-(ex)**2
+print(paste("The variance of X is:",var))
